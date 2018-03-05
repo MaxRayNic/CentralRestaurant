@@ -18,28 +18,52 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.stackroute.RestaurantApplication;
 import com.stackroute.domain.Restaurant;
 
+//Integration testing
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RestaurantApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+/**
+ * RestaurantControllerIT is the integration test class
+ * 
+ * @author
+ *
+ */
 public class RestaurantControllerIT {
 
 	@LocalServerPort
+	/**
+	 * creating a port entity just to handle the port values
+	 */
 	private int port;
 
-	TestRestTemplate restTemplate = new TestRestTemplate();
+	/**
+	 * creating a TestRestTemplate to work on the integration test
+	 */
+	private TestRestTemplate restTemplate = new TestRestTemplate();
 
-	HttpHeaders headers1 = new HttpHeaders();
-	HttpHeaders headers2 = new HttpHeaders();
+	/**
+	 * creating HttpHeaders object
+	 */
+	private HttpHeaders headers = new HttpHeaders();
+
+	/**
+	 * creating HttpHeaders object
+	 */
+	private HttpHeaders headers1 = new HttpHeaders();
 
 	@Test
+	/**
+	 * method for testing the functionality of searchById method of
+	 * RestauratController class
+	 */
 	public void testSearchById() {
 
-		Restaurant restaurant = new Restaurant();
+		final Restaurant restaurant = new Restaurant();
 		restaurant.setId(4);
 		restaurant.setRestaurantName("Gillys1");
 		restaurant.setRestaurantLocation("Bangalore1");
 		restaurant.setCostOfTwo(new BigDecimal(200000));
 
-		HttpEntity<Restaurant> entity1 = new HttpEntity<Restaurant>(restaurant, headers2);
+		HttpEntity<Restaurant> entity1 = new HttpEntity<Restaurant>(restaurant, headers1);
 
 		ResponseEntity<String> response1 = restTemplate.exchange(createURLWithPort("/api/v1/restaurant"),
 				HttpMethod.POST, entity1, String.class);
@@ -54,36 +78,47 @@ public class RestaurantControllerIT {
 		try {
 			JSONAssert.assertEquals(expected, response.getBody(), false);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Test
+	/**
+	 * method for testing the functionality of addRestaurant method of
+	 * RestauratController class
+	 */
 	public void addRestaurantTest() {
 
-		Restaurant restaurant = new Restaurant();
+		final Restaurant restaurant = new Restaurant();
 		restaurant.setId(1);
 		restaurant.setRestaurantName("Truffles");
 		restaurant.setRestaurantLocation("Bangalore");
 		restaurant.setCostOfTwo(new BigDecimal(20000));
 
-		HttpEntity<Restaurant> entity = new HttpEntity<Restaurant>(restaurant, headers2);
+		// Declaring an httpEntity for Restaurant
+		final HttpEntity<Restaurant> entity = new HttpEntity<Restaurant>(restaurant, headers);
 
-		ResponseEntity<String> response = restTemplate.exchange(createURLWithPort("/api/v1/restaurant"),
+		// restTemplate class is used to create a Post request.
+		final ResponseEntity<String> response = restTemplate.exchange(createURLWithPort("/api/v1/restaurant"),
 				HttpMethod.POST, entity, String.class);
+
 		String expected = "{id:1,restaurantName:Truffles,restaurantLocation:Bangalore,costOfTwo:20000}";
 
 		try {
 			JSONAssert.assertEquals(expected, response.getBody(), false);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
-	private String createURLWithPort(String uri) {
+	/**
+	 * Method generates the url where the application is running.
+	 * 
+	 * @param uri
+	 * @return String
+	 */
+	private String createURLWithPort(final String uri) {
 		return "http://localhost:" + port + uri;
 	}
 }

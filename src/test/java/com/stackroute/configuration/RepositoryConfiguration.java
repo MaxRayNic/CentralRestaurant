@@ -11,5 +11,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackages = { "com.stackroute" })
 @EnableMongoRepositories(basePackages = { "com.stackroute.repository" })
 @EnableTransactionManagement
+/**
+ * Configuration class for spring-boot repository testing.
+ * 
+ * @author
+ *
+ */
 public class RepositoryConfiguration {
 }

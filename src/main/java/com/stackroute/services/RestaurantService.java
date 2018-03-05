@@ -7,14 +7,48 @@ import org.springframework.stereotype.Service;
 import com.stackroute.domain.Restaurant;
 
 @Service
+/**
+ * 
+ * Restaurant Service interface will contain following methods declaration
+ * addRestaruant, deleteRestaurant, searchById, findAll and
+ * serachByRestaurantName
+ * 
+ * @author
+ *
+ */
 public interface RestaurantService {
-	public Restaurant addRestaurant(Restaurant restaurant);
 
-	public String deleteRestaurant(int restaurantId);
+	/**
+	 * 
+	 * @param restaurant
+	 * @return Retaurant
+	 */
+	Restaurant addRestaurant(Restaurant restaurant);
 
-	public Restaurant searchById(int restaurantID);
+	/**
+	 * 
+	 * @param restaurantId
+	 * @return String
+	 */
+	String deleteRestaurant(int restaurantId);
 
-	public List<Restaurant> findAll();
+	/**
+	 * 
+	 * @param restaurantID
+	 * @return Restaurant
+	 */
+	Restaurant searchById(int restaurantID);
 
-	// public List<Restaurant> findByCostOfTwo(BigDecimal costOfTwo);
+	/**
+	 *
+	 * @return List<Restaurant>
+	 */
+	List<Restaurant> findAll();
+
+	/**
+	 * 
+	 * @param restaurantName
+	 * @return Restaurant
+	 */
+	Restaurant searchByRestaurantName(String restaurantName);
 }

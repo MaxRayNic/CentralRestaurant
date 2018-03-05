@@ -13,9 +13,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
+/**
+ * SwaggerConfig class
+ * @author 
+ *
+ */
 public class SwaggerConfig {
 
 	@Bean
+	/**
+	 * restaurantApi method
+	 * @return Docket
+	 */
 	public Docket restaurantApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
@@ -24,7 +33,10 @@ public class SwaggerConfig {
 				.build()
 				.apiInfo(metaData());
 	}
-
+	/**
+	 * metaData method
+	 * @return ApiInfo
+	 */
 	private ApiInfo metaData() {
 		ApiInfo apiInfo = new ApiInfo(
 				"Spring Boot REST API",
