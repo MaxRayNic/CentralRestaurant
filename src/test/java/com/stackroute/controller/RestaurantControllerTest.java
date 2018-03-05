@@ -103,7 +103,7 @@ public class RestaurantControllerTest {
 
 		given(restaurantServiceImpl.searchByRestaurantName("Truffles")).willReturn(restaurant1);
 
-		mvc.perform(get("/api/v1/restaurant?name=Truffles"))
+		mvc.perform(get("/api/v1/restaurant/restaurantname?name=Truffles"))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id", is(1))).andExpect(jsonPath("$.restaurantName", is("Truffles")))
 				.andExpect(jsonPath("$.restaurantLocation", is("Bglr"))).andExpect(jsonPath("$.costOfTwo", is(2000)));

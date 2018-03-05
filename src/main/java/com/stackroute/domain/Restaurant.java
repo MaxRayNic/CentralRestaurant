@@ -4,31 +4,19 @@ import java.math.BigDecimal;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @Document
 public class Restaurant {
 
-	//
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private int id;
-	// @Id
-	// private String id;
-	//
-	// public String getId() {
-	// return id;
-	// }
-	//
-	// public void setId(String id) {
-	// this.id = id;
-	// }
+	
 
 	private String restaurantName;
+	
 	private String restaurantLocation;
+	
 	private BigDecimal costOfTwo;
 
 	public String getRestaurantName() {

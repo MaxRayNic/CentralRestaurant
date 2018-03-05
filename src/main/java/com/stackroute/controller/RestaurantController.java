@@ -18,8 +18,14 @@ import com.stackroute.domain.Restaurant;
 import com.stackroute.services.RestaurantService;
 import com.stackroute.services.RestaurantServiceImpl;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 @RestController
 @RequestMapping(value = "/api/v1")
+@Api(value = "Restaurant", description = "Add/Search/Delete Restaurants" )
 public class RestaurantController {
 
 	RestaurantService restaurantService;
@@ -29,7 +35,8 @@ public class RestaurantController {
 		this.restaurantService = restaurantService;
 	}
 
-	@PostMapping(value = "/restaurant")
+	@ApiOperation(value = "Add restaurant to your Favorites list", response = ResponseEntity.class)
+	@PostMapping(value = "/restaurant", produces = "application/json")
 	public ResponseEntity<Restaurant> addRestaurant(@RequestBody Restaurant restaurant) {
 
 		Restaurant addedRestaurant = restaurantService.addRestaurant(restaurant);
@@ -38,7 +45,8 @@ public class RestaurantController {
 
 	}
 
-	@DeleteMapping(value = "/restaurant/{restaurantId}")
+	@ApiOperation(value = "Delete restaurant from your Favorites list", response = ResponseEntity.class)
+	@DeleteMapping(value = "/restaurant/{restaurantId}", produces = "text/plain")
 	public ResponseEntity<String> deleteRestaurant(@PathVariable("restaurantId") int restaurantId) {
 
 		String deletedMessage = restaurantService.deleteRestaurant(restaurantId);
@@ -47,29 +55,31 @@ public class RestaurantController {
 
 	}
 
-	@GetMapping(value = "/restaurant/{id}")
+	@ApiOperation(value = "Serach restaurant by providing restaurant id", response = ResponseEntity.class)
+	@GetMapping(value = "/restaurant/{id}", produces = "application/json")
 	public ResponseEntity<Restaurant> searchById(@PathVariable("id") int restaurantId) {
 		Restaurant restaurant = restaurantService.searchById(restaurantId);
 		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.FOUND);
 
 	}
 
-	@RequestMapping(value = "/restaurant")
+	@ApiOperation(value = "List all the available restaurants", response = ResponseEntity.class)
+	@ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+	)
+	@GetMapping(value = "/restaurant", produces = "application/json")
 	public ResponseEntity<List<Restaurant>> findAllRestaurant() {
 		List<Restaurant> allRestaurants = restaurantService.findAll();
 		return new ResponseEntity<List<Restaurant>>(allRestaurants, HttpStatus.OK);
 	}
 
-	// @RequestMapping(value = "/restaurant/costOfTwo/{costOfTwo}")
-	// public ResponseEntity<List<Restaurant>> findByCostOfTwo(@PathVariable
-	// BigDecimal costOfTwo) {
-	// List<Restaurant> allRestaurants =
-	// restaurantService.findByCostOfTwo(costOfTwo);
-	// return new ResponseEntity<List<Restaurant>>(allRestaurants, HttpStatus.OK);
-	// }
-
-	@RequestMapping(value = "/restaurant", params = "name")
-	public ResponseEntity<Restaurant> findByRestaurantName(@RequestParam("name") String restaurantName) {
+	@ApiOperation(value = "Find restaurant by name", response = ResponseEntity.class)
+	@GetMapping(value = "/restaurant/restaurantname", params = "name", produces = "application/json")
+	public ResponseEntity<Restaurant> searchByRestaurantName(@RequestParam("name") String restaurantName) {
 		Restaurant restaurantByName = ((RestaurantServiceImpl) restaurantService)
 				.searchByRestaurantName(restaurantName);
 		return new ResponseEntity<Restaurant>(restaurantByName, HttpStatus.OK);
