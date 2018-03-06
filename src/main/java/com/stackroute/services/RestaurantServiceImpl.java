@@ -3,9 +3,12 @@ package com.stackroute.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.stackroute.domain.Restaurant;
+import com.stackroute.exception.RestaurantAlreadyExistsException;
+import com.stackroute.exception.RestaurantNotFoundException;
 import com.stackroute.repository.RestaurantRepository;
 
 @Service
@@ -42,8 +45,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 	 * @return restaurant
 	 */
 	public Restaurant addRestaurant(final Restaurant restaurant) {
-		restaurantRepository.save(restaurant);
+		try{
+			restaurantRepository.save(restaurant);
+			}catch(DuplicateKeyException de){
+				throw new RestaurantAlreadyExistsException(restaurant);
+			}
 		return restaurant;
+		
 	}
 
 	/**
@@ -85,7 +93,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 	 * @return restaurant
 	 */
 	public Restaurant searchByRestaurantName(final String restaurantName) {
-		return (Restaurant) restaurantRepository.findByRestaurantName(restaurantName);
+		Restaurant restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		if(restaurant==null){
+			throw new RestaurantNotFoundException(restaurantName+" doesnot exist");
+			
+		}
+		
+		return restaurant;
 
 	}
 }

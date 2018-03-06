@@ -2,6 +2,7 @@ package com.stackroute.domain;
 
 import java.math.BigDecimal;
 
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * 
  */
 @Document
+@CompoundIndex(def = "{'restaurantName':1, 'restaurantLocation':1}",unique=true,name = "compound_index" )
 public class Restaurant {
 
 	/**

@@ -14,9 +14,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.MultiValueMap;
 
 import com.stackroute.RestaurantApplication;
 import com.stackroute.domain.Restaurant;
+import com.stackroute.exception.ExceptionResponse;
 
 //Integration testing
 @RunWith(SpringRunner.class)
@@ -49,6 +51,8 @@ public class RestaurantControllerIT {
 	 * creating HttpHeaders object
 	 */
 	private HttpHeaders headers1 = new HttpHeaders();
+	private HttpHeaders headers2 = new HttpHeaders();
+	private HttpHeaders headers3 = new HttpHeaders();
 
 	@Test
 	/**
@@ -111,6 +115,63 @@ public class RestaurantControllerIT {
 		}
 
 	}
+	
+	@Test
+	public void testSearchByName() {
+
+		ExceptionResponse e = new ExceptionResponse();
+		e.setMessage("Oc doesnot exist");
+		e.setDetails("uri=/api/v1/restaurant");
+		
+		HttpEntity<ExceptionResponse> entity1 = new HttpEntity<ExceptionResponse>(e, headers3);
+
+		ResponseEntity<String> response1 = restTemplate.exchange(createURLWithPort("/api/v1/restaurant"),
+				HttpMethod.POST, entity1, String.class);
+
+		HttpEntity<String> entity = new HttpEntity<String>(null, headers1);
+
+		ResponseEntity<String> response = restTemplate.exchange(createURLWithPort("/api/v1/restaurant?name=Oc"),
+				HttpMethod.GET, entity, String.class);
+
+		String expected = "{message: Oc doesnot exist,details: uri=/api/v1/restaurant}";
+
+		try {
+			JSONAssert.assertEquals(expected, response.getBody(), false);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	@Test
+	public void addRestaurantTestException() {
+		
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(2);
+		restaurant.setRestaurantName("A");
+		restaurant.setRestaurantLocation("F");
+        restaurant.setCostOfTwo(new BigDecimal(200));
+
+		ExceptionResponse e = new ExceptionResponse();
+		e.setMessage("A is already present");
+		e.setDetails("uri=/api/v1/restaurant");
+
+		//HttpEntity<ExceptionResponse> entity = new HttpEntity<ExceptionResponse>(e, headers2);
+		HttpEntity<Restaurant> entity1 = new HttpEntity<Restaurant>(restaurant, headers2);
+
+		ResponseEntity<String> response = restTemplate.exchange(createURLWithPort("/api/v1/restaurant"),
+				HttpMethod.POST, entity1, String.class);
+		String expected = "{message: A is already present,details: uri=/api/v1/restaurant}";
+
+		try {
+			JSONAssert.assertEquals(expected, response.getBody(), false);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+	}
+
 
 	/**
 	 * Method generates the url where the application is running.
